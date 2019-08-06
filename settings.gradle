@@ -1,0 +1,25 @@
+// 重新指定项目名
+rootProject.name = 'GradleNotes'
+
+include ':app', ':DebugLib', ':ReleaseLib'
+
+// 重新制定 :app 模块的build.gradle 文件位置
+//project(':app').buildFileName = '../AppBuild.gradle'
+project(':app').buildFileName = 'AppBuild.gradle'
+
+include ':JavaLib'
+include ":GroovyApp", ":KotlinApp"
+project(":GroovyApp").projectDir = new File("otherapp/GroovyApp")
+project(":KotlinApp").projectDir = new File("otherapp/KotlinApp")
+
+// 重新指定模块的名字和路径
+project(":JavaLib").projectDir = file("libraries/javalib")
+project(":DebugLib").projectDir = new File("libraries/debuglibrary")
+project(":ReleaseLib").projectDir = new File("libraries/releaselibrary")
+
+// 插件
+include(":fristPlugin")
+project(":fristPlugin").projectDir = new File("plugins/FirstPlugin")
+
+// 本地插件 文件和命名都定死了(因为命名的原因可以不指定它为子模块)
+// include(":buildsrc")// buildSrc

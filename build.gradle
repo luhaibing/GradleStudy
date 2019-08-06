@@ -1,0 +1,100 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+////ext 全局变量
+//ext {
+//    android_support_version = "25.1.1"
+//    junit_version = "4.12"
+//    espresso_version = "2.2.2"
+//}
+////ext.versions = [
+////        compile_sdk    : 25,
+////        build_tools_sdk: "25.0.2",
+////        min_sdk        : 15,
+////        target_sdk     : 25,
+////]
+////ext.libraries = [
+////        android_support_v7 : "com.android.support:appcompat-v7:${android_support_version}",
+////        design_support     : "com.android.support:design:${android_support_version}",
+////        support_annotations: "com.android.support:support-annotations:${android_support_version}",
+////]
+////ext.tests_libraries = [
+////        junit   : "junit:junit:${junit_version}",
+////        espresso: "com.android.support.test.espresso:espresso-core:${espresso_version}",
+////]
+//ext {
+//    //gradle-plugin 生成的jar的位置
+//    pluginDirsrc = "../../pluginJar"
+//    versions = [
+//            compile_sdk    : 25,
+//            build_tools_sdk: "25.0.2",
+//            min_sdk        : 15,
+//            target_sdk     : 25,
+//    ]
+//    libraries = [
+//            android_support_v7 : "com.android.support:appcompat-v7:${android_support_version}",
+//            design_support     : "com.android.support:design:${android_support_version}",
+//            support_annotations: "com.android.support:support-annotations:${android_support_version}",
+//    ]
+//    tests_libraries = [
+//            junit   : "junit:junit:${junit_version}",
+//            espresso: dependencies.create("com.android.support.test.espresso:espresso-core:${espresso_version}") {
+//                exclude group: 'com.android.support', module: 'support-annotations'
+//            }
+//    ]
+//}
+
+apply from: "dependencies.gradle"
+
+/**
+ * buildscript,repositories和dependencies本身是方法名。
+ * 后面跟的大括号部分，都是一个闭包，作为方法的参数。
+ * 闭包可以简单的理解为一个代码块或方法指针。
+ */
+buildscript {
+
+    //ext { gradle_version = "2.2.3" }
+    def gradle_version = '3.4.2'
+
+    repositories {
+        //使用jcenter库
+        jcenter()
+        google()
+    }
+    dependencies {
+
+        // 依赖android提供的2.2.3的gradle build
+        //classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath "com.android.tools.build:gradle:${gradle_version}"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+//为所有的工程的repositories配置为jcenters
+allprojects {
+    repositories {
+        jcenter()
+        google()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+clean {}.doFirst {
+    println "clean doFirst."
+}
+//clean {}.doLast{
+clean.doLast {
+    println "clean doLast."
+}
+
+////task tetsRead (type: Delete) {
+////task tetsRead {
+////task tetsRead() {
+//task tetsRead << {
+//    Properties data = readVersionInfo();
+//    println "data -->>> " + data.toString();
+//}

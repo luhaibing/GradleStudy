@@ -1,0 +1,202 @@
+//import com.luhaibing.localplugins.SecondPlugin
+//import com.luhaibing.localplugins.task.MyCustomPlugin
+
+// 使项目输出为apk
+// apply plugin: 'com.android.application'
+// 使项目输出为 *.jar
+// apply plugin: 'com.android.library'
+
+//apply plugin 导入使用gradle插件
+apply plugin: 'com.android.application'
+//apply from 导入文件
+//apply from: '../config/apk.gradle'
+//apply from: '../config/plugin.gradle'
+
+//if (ext.isDebug) {
+//    apply plugin: 'com.android.library'
+//} else {
+//    apply plugin: 'com.android.application'
+//}
+
+apply from: './apk.gradle'
+apply from: 'plugin.gradle'
+
+android {
+
+    //compileSdkVersion 25
+    //buildToolsVersion "25.0.2"
+    compileSdkVersion versions.compile_sdk
+
+    defaultConfig {
+        applicationId "com.luhaibing.gradle_study"
+        minSdkVersion versions.min_sdk
+        targetSdkVersion versions.target_sdk
+        //versionCode 1
+        //versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        //在BuildConfig中生成 String类型的author字段
+        buildConfigField "String", "author", "\"luhaibing\""
+        //生成资源 String类型的date字段
+        resValue "string", "date", "${getTime()}"
+        //在manifest中使用的占位符
+        manifestPlaceholders = [
+                one: "gradle-paractice",
+                two: "test-gradle"]
+    }
+
+    //签名文件属性
+    signingConfigs {
+        release {
+            keyAlias 'lhb'
+            keyPassword 'luhaibing'
+            storeFile file('../config/luhaibing.jks')
+            storePassword 'l031583242'
+        }
+    }
+
+    //打包分类
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+
+            //是否去除无效的资源文件,这个设置依赖于minifyEnabled的设置，因此要两者同时设置为true才会生效
+            shrinkResources true
+            //是否启用混淆
+            minifyEnabled false
+
+            //getDefaultProguardFile('proguard-android.txt')表示获取SDK下'proguard-android.txt‘文件中的默认混淆规则
+            //'proguard-rules.pro'表示使用项目根目录下的 'proguard-rules.pro'文件中的混淆规则
+            //proguard-rules.pro文件名可以任意，只要在配置文件中指明即可
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            //启用zipAlign apk包的本质是一个zip压缩文档，优化的目的是使包内未压缩的数据能够有序的排列，从而减少应用程序运行时的内存消耗.
+            zipAlignEnabled true
+
+            //加上后缀
+            applicationIdSuffix '.release'
+            versionNameSuffix '.release'
+        }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '.debug'
+        }
+    }
+
+//    splits的使用
+//    我们除了可以通过设置buildtypes来进行分类打包之外，还可以根据屏幕大小、cpu架构适配类型来进行分类打包，通过使用splits我们可以达成这个目的，
+//    例如
+//    splits {
+//        density {
+//            enable true
+//            reset()
+//            include "mdpi", "hdpi"
+//        }
+//        abi {
+//            enable true
+//            reset()
+//            include "x86", "mips"
+//        }
+//    }
+
+//    解决方法数限制
+//    Android设定的方法数是65536个（DEX 64K problem），超过这个方法数，导致dex无法生成，就无法生成APK.处理这个问题
+//    ，除了尽可能的进行apk瘦身，减少整个apk的方法数之外，可以进行两种设置进行解决。
+//
+//    1. 使用multiDex。开启分包模式
+//
+//    defaultConfig {
+//        multiDexEnabled=true
+//    }
+//
+//    2. 忽略方法数的检查。2.3版本及以下的手机无法正常安装
+//
+//    android {
+//        dexOptions {
+//            jumboMode = true
+//        }
+
+
+}
+
+
+dependencies {
+    //依赖libs下面所有的jar包
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    // 这种语法是通过包名：工程名：版本号的形式来依赖的
+    //compile 'com.android.support:appcompat-v7:25.1.1'
+    //compile group: 'com.android.support', name: 'appcompat-v7', version: '25.1.1'
+    //transitive:第三方依赖
+    //compile(group: 'com.android.support', name: 'appcompat-v7', version: '25.1.1', transitive: true)
+    compile(
+            libraries.android_support_v7,
+            libraries.design_support,
+            libraries.support_annotations
+    )
+    testCompile(
+            tests_libraries.junit
+    )
+    androidTestCompile(tests_libraries.espresso
+            , tests_libraries.junit
+    )
+
+    // compile project(':JavaLib')
+    // debugCompile project(':DebugLib')
+    // releaseCompile project(':ReleaseLib')
+    // meizuCompile project(':JavaLib')
+}
+
+//定义一个函数
+def getTime() {
+    return new Date().format("yyyy.MM.dd G 'at' hh:mm:ss z");
+}
+
+buildscript {
+    repositories {
+        maven {
+            //first-plugin 所在的仓库
+            //这里是发布在本地文件夹了
+            url uri('../pluginJar')
+            //url uri(pluginDirsrc)
+        }
+    }
+    dependencies {
+        //引入cooker-plugin
+        //格式为-->group:module/artifactId:version
+        //classpath 'com.luhaibing.plugins:first-plugin:1.0.0'
+        classpath group: 'com.luhaibing.plugins', name: 'first-plugin', version: '1.0.0'
+    }
+}
+apply plugin: 'first-plugin'
+
+////引用本地插件
+////apply plugin: com.luhaibing.localplugins.SecondPlugin
+//apply plugin: SecondPlugin
+//apply plugin: MyCustomPlugin
+//
+//apply plugin: "findbugs"
+//
+////定义一个task任务，这个任务的类型是FindBugs
+//task findbugs(type: FindBugs) {
+//    //有警告错误的时候也是允许构建
+//    ignoreFailures = true
+//    effort = "default"
+//    //报告的级别，Low,Medium,High
+//    reportLevel = "high"
+//    println("$project.buildDir")
+//    //classes和source分别是对应的.classe文件夹地址，和源代码文件地址。
+//    classes = files("$project.buildDir/intermediates/classes")
+//    source = fileTree("src/main/java/")
+//    classpath = files()
+//    //指定报告类型，有两种方式xml和html，只允许一种输出格式
+//    reports {
+//        xml.enabled = false
+//        html.enabled = true
+//        xml {
+//            destination "$project.buildDir/findbugs.xml"
+//        }
+//        html {
+//            destination "$project.buildDir/findbugs.html"
+//        }
+//    }
+//}

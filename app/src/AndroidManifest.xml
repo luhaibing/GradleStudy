@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.luhaibing.gradle_study">
+
+    <!--android:icon="@mipmap/ic_launcher"-->
+    <!--android:label="@string/app_name"-->
+    <application
+        android:allowBackup="true"
+        android:label="${app_name}"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
+        <meta-data
+            android:name="value"
+            android:value="${one}"/>
+
+        <activity android:name=".MainActivity">
+            <meta-data
+                android:name="value"
+                android:value="MainActivity"/>
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+
+        <service
+            android:name=".MyIntentService"
+            android:exported="false">
+            <meta-data
+                android:name="value"
+                android:value="MyIntentService"/>
+        </service>
+
+        <activity
+            android:name=".OtherActivity">
+            <meta-data
+                android:name="value"
+                android:value="OtherActivity"/>
+        </activity>
+
+        <receiver
+            android:name=".MyReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <meta-data
+                android:name="value"
+                android:value="OtherActivity"/>
+        </receiver>
+
+
+        <activity-alias
+            android:name=".One"
+            android:enabled="false"
+            android:icon="@drawable/ic_android_red"
+            android:label="第一"
+            android:targetActivity=".MainActivity">
+
+            <meta-data
+                android:name="value"
+                android:value="One"/>
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name=".Two"
+            android:enabled="false"
+            android:icon="@drawable/ic_donut_small"
+            android:label="第一"
+            android:targetActivity=".MainActivity">
+
+            <meta-data
+                android:name="value"
+                android:value="Two"/>
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+        </activity-alias>
+
+
+    </application>
+
+</manifest>

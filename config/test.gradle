@@ -1,0 +1,38 @@
+def readfile(String file) {
+    return null;
+}
+
+task test1() {
+    println "test1 task is running."
+}
+
+task test2 {
+    println "test2 task is running."
+}
+
+task test3(type: Delete) {
+    println "test3 task is running."
+}
+
+task test4 << {
+    println "test4 task is running."
+}
+
+//def readVersionInfo() {
+//    def File file = new File("versions.properties")
+//    if (file.canRead()) {
+//        Properties pro = new Properties();
+//        pro.load(new FileReader(file))
+//        return pro;
+//    } else {
+//        throw new RuntimeException("read " + file.toString() + "  failed.")
+//    }
+//}
+
+////task tetsRead (type: Delete) {
+////task tetsRead {
+////task tetsRead() {
+//task tetsRead << {
+//    Properties data = readVersionInfo();
+//    println "data -->>> " + data.toString();
+//}

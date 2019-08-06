@@ -1,0 +1,42 @@
+//ext 全局变量
+ext {
+    android_support_version = "25.1.1"
+    junit_version = "4.12"
+    espresso_version = "2.2.2"
+}
+//ext.versions = [
+//        compile_sdk    : 25,
+//        build_tools_sdk: "25.0.2",
+//        min_sdk        : 15,
+//        target_sdk     : 25,
+//]
+//ext.libraries = [
+//        android_support_v7 : "com.android.support:appcompat-v7:${android_support_version}",
+//        design_support     : "com.android.support:design:${android_support_version}",
+//        support_annotations: "com.android.support:support-annotations:${android_support_version}",
+//]
+//ext.tests_libraries = [
+//        junit   : "junit:junit:${junit_version}",
+//        espresso: "com.android.support.test.espresso:espresso-core:${espresso_version}",
+//]
+ext {
+    //gradle-plugin 生成的jar的位置
+    pluginDirsrc = "../../pluginJar"
+    versions = [
+            compile_sdk    : 25,
+            build_tools_sdk: "25.0.2",
+            min_sdk        : 15,
+            target_sdk     : 25,
+    ]
+    libraries = [
+            android_support_v7 : "com.android.support:appcompat-v7:${android_support_version}",
+            design_support     : "com.android.support:design:${android_support_version}",
+            support_annotations: "com.android.support:support-annotations:${android_support_version}",
+    ]
+    tests_libraries = [
+            junit   : "junit:junit:${junit_version}",
+            espresso: dependencies.create("com.android.support.test.espresso:espresso-core:${espresso_version}") {
+                exclude group: 'com.android.support', module: 'support-annotations'
+            }
+    ]
+}
